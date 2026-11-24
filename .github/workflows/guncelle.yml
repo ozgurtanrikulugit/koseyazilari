@@ -1,5 +1,8 @@
 name: Yazilari guncelle
 on:
+  push:
+    paths:
+      - ".github/workflows/guncelle.yml"
   schedule:
     - cron: "0 */3 * * *"
   workflow_dispatch:
