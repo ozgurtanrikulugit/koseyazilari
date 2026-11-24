@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Köşe Yazıları</title>
+<style>
+body{font-family:-apple-system,sans-serif;margin:0;background:#f5f5f5;color:#222}
+header{background:#1a1a2e;color:#fff;padding:14px;position:sticky;top:0}
+h1{font-size:18px;margin:0 0 10px}
+input{width:100%;box-sizing:border-box;padding:10px;font-size:16px;border:0;border-radius:8px}
+.tabs{display:flex;gap:8px;margin-top:10px}
+.tabs button{flex:1;padding:8px;border:0;border-radius:8px;background:#34345a;color:#fff;font-size:15px}
+.tabs button.on{background:#e94560}
+main{padding:12px}
+.card{background:#fff;border-radius:10px;padding:12px;margin-bottom:10px}
+.card a{color:#222;font-weight:600;text-decoration:none}
+.meta{font-size:13px;color:#666;margin-top:6px;display:flex;justify-content:space-between;align-items:center}
+.star{background:none;border:0;font-size:26px;color:#bbb}
+.star.on{color:#f5a623}
+</style>
+</head>
+<body>
+<header>
+<h1>Köşe Yazıları</h1>
+<input id="q" placeholder="Yazar ara...">
+<div class="tabs"><button id="t1" class="on">Tümü</button><button id="t2">Favorilerim</button></div>
+</header>
+<main id="liste"></main>
+<script>
+var yazilar=[{yazar:"Örnek Yazar",gazete:"Örnek Gazete",baslik:"Bu bir deneme yazısıdır",link:"https://example.com",tarih:"2026-11-24"}];
+var sekme="tum",fav=[];
+try{fav=JSON.parse(localStorage.getItem("fav")||"[]")}catch(e){}
+function kaydet(){try{localStorage.setItem("fav",JSON.stringify(fav))}catch(e){}}
+function norm(s){return String(s).toLocaleLowerCase("tr").replace(/ı/g,"i").normalize("NFD").replace(/[\u0300-\u036f]/g,"")}
+function e(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function ciz(){
+var q=norm(document.getElementById("q").value);
+var l=yazilar.filter(function(y){
+if(sekme=="fav"&&fav.indexOf(y.yazar)<0)return false;
+return norm(y.yazar).indexOf(q)>=0;
+});
+var h=l.map(function(y){
+var link=/^https?:\/\//.test(y.link)?y.link:"#";
+var on=fav.indexOf(y.yazar)>=0;
+return '<div class="card"><a href="'+e(link)+'" target="_blank">'+e(y.baslik)+'</a><div class="meta"><span>'+e(y.yazar)+' · '+e(y.gazete)+' · '+e(y.tarih)+'</span><button class="star'+(on?' on':'')+'" data-y="'+e(y.yazar)+'">'+(on?'★':'☆')+'</button></div></div>';
+}).join("");
+document.getElementById("liste").innerHTML=h||"<p>Sonuç yok.</p>";
+}
+document.getElementById("q").oninput=ciz;
+document.getElementById("t1").onclick=function(){sekme="tum";this.className="on";document.getElementById("t2").className="";ciz()};
+document.getElementById("t2").onclick=function(){sekme="fav";this.className="on";document.getElementById("t1").className="";ciz()};
+document.getElementById("liste").onclick=function(ev){
+var b=ev.target.closest(".star");if(!b)return;
+var a=b.getAttribute("data-y"),i=fav.indexOf(a);
+if(i<0)fav.push(a);else fav.splice(i,1);
+kaydet();ciz();
+};
+fetch("data/yazilar.json").then(function(r){return r.json()}).then(function(d){
+yazilar=d.sort(function(a,b){return a.tarih<b.tarih?1:-1});ciz();
+}).catch(function(){});
+ciz();
+</script>
+</body>
+</html>
