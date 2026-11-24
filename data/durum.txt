@@ -1,0 +1,10 @@
+Hürriyet: CALISTI, 50 yazi
+Sabah: CALISTI, 10 yazi
+Habertürk: CALISTI, 12 yazi
+Milliyet: CALISMADI
+Sözcü: CALISMADI
+Cumhuriyet: CALISTI, 100 yazi
+Karar: CALISMADI
+Yeni Şafak: CALISMADI
+BirGün: CALISTI, 76 yazi
+Dünya: CALISTI, 25 yazi
