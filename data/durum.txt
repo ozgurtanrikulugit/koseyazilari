@@ -1,5 +1,5 @@
 Hürriyet: CALISTI, 50 yazi
-Sabah: CALISTI, 18 yazi
+Sabah: CALISTI, 12 yazi
 Habertürk: CALISTI, 12 yazi
 Milliyet: CALISMADI
 Sözcü: CALISMADI
